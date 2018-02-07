@@ -7,10 +7,15 @@ Includes ICAO 24-bit aircraft identification code, flight code (if given), coord
 - Python 3.5+
 
 # Installation
+- As an archive:
 1. Download plane-detector-0.1.tar.gz
-2. Unzip: `$ tar -xf plane-detector-0.1.tar.gz`
+2. Unzip: `$ tar -xf plane-detector-0.1.tar.gz` <br>
+(if you're reading this, you probably already have done that)
 3. `$ cd plane_detector-0.1`
 4. `$ pip install .`
+- From repository:
+1. `$ git clone git@github.com:xelnod/plane_detector.git`
+2. `$ pip install .` 
 
 # Usage:
 `$ plane-detector`
