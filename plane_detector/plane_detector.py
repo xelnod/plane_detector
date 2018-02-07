@@ -7,12 +7,12 @@ from tabulate import tabulate
 from plane_detector.config import OPENSKY_API_ENDPOINT, CITY_COORDS, MAX_DISTANCE_FROM_CITY_KM
 
 
-def calculate_distance(to_lat, to_long, lat, long):
+def calculate_distance(lat1, long1, lat2, long2):
     """
     Calculates distances between two points on map
     :return: distance, km: float
     """
-    return geopy.distance.vincenty((to_lat, to_long), (lat, long)).km
+    return geopy.distance.vincenty((lat1, long1), (lat2, long2)).km
 
 
 class PlaneDetector:
@@ -24,7 +24,6 @@ class PlaneDetector:
                                  'long': float,
                                  'distance': float}
         """
-        paris_lat, paris_long = CITY_COORDS
         r = requests.get(OPENSKY_API_ENDPOINT)
         if not r.ok:
             return None
@@ -36,7 +35,7 @@ class PlaneDetector:
             lat, long = i[6], i[5]
             if lat and long:
                 # won't use (*CITY_COORDS, lat, long) since it would make the code incompatible with Python < 3.5
-                distance = calculate_distance(paris_lat, paris_long, lat, long)
+                distance = geopy.distance.vincenty(CITY_COORDS, (lat, long)).km
                 if distance <= max_distance:
                     result.append({'icao24': i[0],
                                    'flight_code': i[1],
@@ -51,7 +50,7 @@ class PlaneDetector:
         Alternative implementation, made for the sake of demonstration an example of bad coding. One line though.
         Doesn't work with Python < 3.5
         """
-        return [{'icao24': i[0], 'flight_code': i[1], 'lat': i[6], 'long': i[5], 'distance': calculate_distance(*CITY_COORDS, i[6], i[5])} for i in filter(lambda i: i[6] and i[5] and calculate_distance(*CITY_COORDS, i[6], i[5]) < max_distance, requests.get(OPENSKY_API_ENDPOINT).json()['states'])]
+        return [{'icao24': i[0], 'flight_code': i[1], 'lat': i[6], 'long': i[5], 'distance': geopy.distance.vincenty(CITY_COORDS, (i[6], i[5])).km} for i in filter(lambda i: i[6] and i[5] and geopy.distance.vincenty(CITY_COORDS, (i[6], i[5])).km < max_distance, requests.get(OPENSKY_API_ENDPOINT).json()['states'])]
 
 
 def execute():
