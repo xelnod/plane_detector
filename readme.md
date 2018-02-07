@@ -1,5 +1,10 @@
+# Description
+Lists all airplanes within 450 km from Paris as a list. 
+
+Includes ICAO 24-bit aircraft identification code, flight code (if given), coordinates and distance to Paris.  
+
 # Requirements
-- Python 3.6
+- Python 3.5+
 
 # Installation
 1. Download plane-detector-0.1.tar.gz
